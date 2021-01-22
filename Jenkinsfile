@@ -3,18 +3,18 @@ pipeline {
     
     parameters {
         string(
-            name: "CustomerName", 
-            defaultValue: "MINT-POC", 
+            name: "CustomerName",
+            defaultValue: "MINT-POC",
             description: "Enter customer name for which stack is to be provisioned."
         )
         string(
-            name: "AccessKey", 
-            defaultValue: "", 
+            name: "AccessKey",
+            defaultValue: "",
             description: "Provide AWS access key."
         )
         string(
-            name: "SecretKey", 
-            defaultValue: "", 
+            name: "SecretKey",
+            defaultValue: "",
             description: "Provide AWS secret key."
         )
         choice(
@@ -23,23 +23,23 @@ pipeline {
             description: "Select an AWS region for stack provisioning."
         )
         string(
-            name: "VPCId", 
-            defaultValue: "vpc-65817803", 
+            name: "VPCId",
+            defaultValue: "vpc-65817803",
             description: "Provide AWS VPC Id."
         )
         string(
             name: "Subnet01Id", 
-            defaultValue: "subnet-641ba73f", 
+            defaultValue: "subnet-641ba73f",
             description: "Provide AWS Subnet 01 Id."
         )
         string(
-            name: "Subnet02Id", 
-            defaultValue: "subnet-4f43d82a", 
+            name: "Subnet02Id",
+            defaultValue: "subnet-4f43d82a",
             description: "Provide AWS Subnet 02 Id."
         )
         string(
-            name: "EKSWorkerImageId", 
-            defaultValue: "ami-0dd0589ee7a07c236", 
+            name: "EKSWorkerImageId",
+            defaultValue: "ami-0dd0589ee7a07c236",
             description: "Provide EKS Worker Image Id."
         )
     }
@@ -59,8 +59,6 @@ pipeline {
         stage("Prepare") {
             steps {
                 cleanWs()
-                echo "Cloning Repository..."
-                git branch: "master", url: "https://github.com/OnstakInc/mint-deployments.git"
             }
         }
         stage("Deploy EKS Cluster") {
@@ -71,6 +69,21 @@ pipeline {
         stage("Configure EKS Cluster") {
             steps {
                 echo ""
+            }
+        }
+        stage("Configure AppDynamics") {
+            steps {
+                echo ""
+            }
+        }
+        stage("Deploy TeaStore") {
+            steps {
+                echo ""
+            }
+        }
+        stage("Cleanup") {
+            steps {
+                cleanWs()
             }
         }
     }
