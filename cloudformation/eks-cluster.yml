@@ -1,0 +1,191 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  VpcID:
+    Type: String
+    Description: Please enter the VPC Id.
+  SubnetId01:
+    Type: String
+    Description: Please enter the Subnet Id 01.
+  SubnetId02:
+    Type: String
+    Description: Please enter the Subnet Id 02.
+  CustomerName:
+    Type: String
+    Description: Please enter the customer name.
+  EKSWorkerImageID:
+    Type: String
+    Description: Please enter Image Id for EKS Worker Node.
+
+Resources:
+  # Security Groups
+  EKSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VpcID
+      GroupDescription: !Sub "MINT Web Security Group For ${CustomerName}"
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub "mint-${CustomerName}-sg-web-${AWS::Region}"
+        - Key: Org
+          Value: CustomerName
+        - Key: Geo
+          Value: US
+        - Key: Cloud
+          Value: AWS
+        - Key: Region
+          Value: !Sub "${AWS::Region}"
+        - Key: AppSDLC
+          Value: Lab
+        - Key: !Sub "kubernetes.io/cluster/${CustomerName}-eks-cluster-${AWS::Region}"
+          Value: 'owned'
+
+  # Create IAM Role For EKS Cluster
+  EKSClusterInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+              - eks.amazonaws.com
+          Action:
+            - sts:AssumeRole
+      Path: "/"
+      RoleName: !Join [ "-", [ !Ref 'AWS::StackName', "EKS-Cluster-Role", !Ref 'AWS::Region' ] ]
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+        - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
+        - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
+  
+  # Create IAM Role For EKS Worker Node
+  EKSWorkerInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      RoleName: !Join [ "-", [ !Ref 'AWS::StackName', "EKS-Worker-Role", !Ref 'AWS::Region' ] ]
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+
+  # Attache IAM Role EKS Cluster
+  EKSClusterInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+      - !Ref EKSClusterInstanceRole
+    
+  # # Attache IAM Role EKS Worker
+  EKSWorkerInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - !Ref EKSWorkerInstanceRole
+  
+  # Create EKS Cluster
+  EKSCluster:
+    Type: "AWS::EKS::Cluster"
+    Properties:
+      Name: !Sub "mint-${CustomerName}-eks-cluster-${AWS::Region}"
+      ResourcesVpcConfig:
+        SecurityGroupIds:
+          - !Ref EKSSecurityGroup
+        SubnetIds:
+          - !Ref SubnetId01
+          - !Ref SubnetId02
+      RoleArn: !GetAtt EKSClusterInstanceRole.Arn
+  
+  # Node Launch Configuration
+  EKSWorkerNodeLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: 'True'
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 40
+            VolumeType: gp2
+            DeleteOnTermination: true
+      IamInstanceProfile: !Ref EKSWorkerInstanceProfile
+      ImageId: !Ref EKSWorkerImageID
+      InstanceType: t3.large
+      KeyName: raheel
+      SecurityGroups:
+        - !Ref EKSSecurityGroup
+      UserData: !Base64
+        "Fn::Sub": |
+          #!/bin/bash
+          adduser onstaklab
+          (echo 'mint123$$!'; echo 'mint123$$!') | passwd onstaklab
+          (echo 'mint123$$!'; echo 'mint123$$!') | passwd root
+          usermod -aG wheel onstaklab
+          sed -i "s/^#PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
+          sed -i "s/^PasswordAuthentication.*/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+          systemctl restart sshd
+          set -o xtrace
+          /etc/eks/bootstrap.sh --apiserver-endpoint '${EKSCluster.Endpoint}' --b64-cluster-ca '${EKSCluster.CertificateAuthorityData}' '${EKSCluster}'
+          /opt/aws/bin/cfn-signal --exit-code $? --stack  ${AWS::StackName} --resource NodeGroup --region ${AWS::Region}     
+  
+  # Node Provision
+  EKSWorkerNodeGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      DesiredCapacity: 1
+      LaunchConfigurationName: !Ref EKSWorkerNodeLaunchConfig
+      MinSize: 1
+      MaxSize: 2
+      VPCZoneIdentifier:
+        - !Ref SubnetId01
+      Tags:
+      - Key: Name
+        PropagateAtLaunch: "true"
+        Value: !Sub "mint-${CustomerName}-eks-worker-${AWS::Region}"
+      - Key: !Sub kubernetes.io/cluster/${CustomerName}-eks-cluster-${AWS::Region}
+        Value: owned
+        PropagateAtLaunch: "true"
+
+Outputs:
+  EKSClusterName:
+    Description: EKS Cluster Name
+    Value: !Ref EKSCluster
+  EKSClusterEndpoint:
+    Description: EKS Cluster Endpoint
+    Value: !GetAtt EKSCluster.Endpoint
+  EKSClusterCertificate:
+    Description: EKS Cluster Endpoint
+    Value: !GetAtt EKSCluster.CertificateAuthorityData
+  EKSWorkerIAMRoleArn:
+    Description: EKS Worker Node IAM Role
+    Value: !GetAtt EKSWorkerInstanceRole.Arn
