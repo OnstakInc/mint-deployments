@@ -63,7 +63,7 @@ pipeline {
         }
         stage("Deploy EKS Cluster") {
             steps {
-                sh "python3 -u launch.py"
+                sh "/usr/bin/python3 -u -u launch.py"
             }
         }
         stage("Configure EKS Cluster") {
