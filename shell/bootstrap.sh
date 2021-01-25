@@ -52,6 +52,7 @@ kubectl create clusterrolebinding mint-admin-role-binding --clusterrole=cluster-
 
 kubectl describe secrets --namespace=kube-system --kubeconfig=./kubeconfig | grep 'token:' | tail -n 1 | sed -En "s/token:      //p" > ./eks-credentials
 
-cat ./eks-credentials
-
 kubectl apply -f ./aws-auth.yml --kubeconfig=./kubeconfig
+
+echo "AWS EKS Token: "
+cat ./eks-credentials
