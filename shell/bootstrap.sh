@@ -5,7 +5,7 @@ EKS_ENDPOINT=$2
 EKS_CERTIFICATE=$3
 EKS_WORKER_ROLE=$4
 
-token=$(aws eks get-token --cluster-name $EKS_CLUSTER | jq -r '.status.token')
+token=$(/usr/local/bin/aws eks get-token --cluster-name $EKS_CLUSTER | jq -r '.status.token')
 
 cat <<EOT > ./kubeconfig
 apiVersion: v1
