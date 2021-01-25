@@ -45,7 +45,6 @@ data:
 
 EOT
 
-
 kubectl create namespace mint-admin --kubeconfig=./kubeconfig
 kubectl create serviceaccount mint-admin --namespace=mint-admin --kubeconfig=./kubeconfig
 kubectl create clusterrolebinding mint-admin-role-binding --clusterrole=cluster-admin --serviceaccount=mint-admin:mint-admin --namespace=mint-admin --kubeconfig=./kubeconfig
