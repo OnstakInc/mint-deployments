@@ -58,5 +58,5 @@ kubectl apply -f ./aws-auth.yml --kubeconfig=./kubeconfig
 echo "EKS Kube Config:"
 cat ./kubeconfig
 
-echo "AWS EKS Token:"
-cat ./eks-credentials
+# echo "AWS EKS Token:"
+# cat ./eks-credentials
