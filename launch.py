@@ -3,10 +3,8 @@ import yaml
 import time
 import boto3
 
-PARAMETERS_FILE = './parameters.yml'
-EKS_CLUSTER_TEMPLATE = './cloudformation/eks-cluster.yml'
 
-params = yaml.load(open(PARAMETERS_FILE), Loader=yaml.Loader)
+EKS_CLUSTER_TEMPLATE = './cloudformation/eks-cluster.yml'
 
 AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
@@ -17,6 +15,9 @@ SUBNET01_ID = os.environ.get('SUBNET01_ID')
 SUBNET02_ID = os.environ.get('SUBNET02_ID')
 CUSTOMER_NAME = os.environ.get('CUSTOMER_NAME')
 EKS_WORKER_IMAGE = os.environ.get('EKS_WORKER_IMAGE')
+
+# PARAMETERS_FILE = './parameters.yml'
+# params = yaml.load(open(PARAMETERS_FILE), Loader=yaml.Loader)
 
 # AWS_ACCESS_KEY = params['aws_access_key']
 # AWS_SECRET_KEY = params['aws_secret_key']
