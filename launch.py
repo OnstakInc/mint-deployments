@@ -3,7 +3,7 @@ import yaml
 import time
 import boto3
 
-
+OUTPUT_FILE = './output.vars'
 EKS_CLUSTER_TEMPLATE = './cloudformation/eks-cluster.yml'
 
 AWS_ACCESS_KEY = os.environ.get('AWS_ACCESS_KEY_ID')
@@ -180,11 +180,16 @@ try:
 
     outputs = stack['Stacks'][0].get('Outputs', [])
 
+    output_file = open(OUTPUT_FILE, 'w')
+
     print('INFO: Stack Information')
     print('-----------------------------------------------')
     for o in outputs:
+        output_file.write(f"env.{o['OutputKey']}='{o['OutputValue']}'")
         print(f"{o['OutputKey']}: {o['OutputValue']}")
     print('-----------------------------------------------')
+
+    output_file.close()
 
 except Exception as e:
     print(e)
