@@ -49,14 +49,13 @@ EOT
 kubectl create namespace mint-admin --kubeconfig=./kubeconfig
 kubectl create serviceaccount mint-admin --namespace=mint-admin --kubeconfig=./kubeconfig
 kubectl create clusterrolebinding mint-admin-role-binding --clusterrole=cluster-admin --serviceaccount=mint-admin:mint-admin --namespace=mint-admin --kubeconfig=./kubeconfig
-kubectl describe secrets --namespace=mint-admin --kubeconfig=./kubeconfig
 
-# kubectl describe secrets --namespace=mint-admin --kubeconfig=./kubeconfig | grep 'token:' | tail -n 1 | sed -En "s/token:      //p" > ./eks-credentials
+kubectl describe secrets --namespace=mint-admin --kubeconfig=./kubeconfig | grep 'token:' | tail -n 1 | sed -En "s/token:      //p" > ./eks-credentials
 
 kubectl apply -f ./aws-auth.yml --kubeconfig=./kubeconfig
 
 echo "EKS Kube Config:"
 cat ./kubeconfig
 
-# echo "AWS EKS Token:"
-# cat ./eks-credentials
+echo "AWS EKS Token:"
+cat ./eks-credentials
