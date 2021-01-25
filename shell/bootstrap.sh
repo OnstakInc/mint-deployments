@@ -54,5 +54,8 @@ kubectl describe secrets --namespace=kube-system --kubeconfig=./kubeconfig | gre
 
 kubectl apply -f ./aws-auth.yml --kubeconfig=./kubeconfig
 
-echo "AWS EKS Token: "
+echo "EKS Kube Config:"
+cat ./kubeconfig
+
+echo "AWS EKS Token:"
 cat ./eks-credentials
