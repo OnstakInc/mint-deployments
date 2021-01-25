@@ -185,7 +185,7 @@ try:
     print('INFO: Stack Information')
     print('-----------------------------------------------')
     for o in outputs:
-        output_file.write(f"env.{o['OutputKey']}='{o['OutputValue']}'")
+        output_file.write(f"env.{o['OutputKey']}='{o['OutputValue']}'\n")
         print(f"{o['OutputKey']}: {o['OutputValue']}")
     print('-----------------------------------------------')
 
