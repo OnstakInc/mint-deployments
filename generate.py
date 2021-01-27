@@ -1,3 +1,4 @@
+import re
 import os
 import yaml
 import boto3
@@ -40,7 +41,8 @@ APPD_CONTROLLER = args.controllerUrl
 print('INFO: Generate Cluster Agent Deployment YAML')
 cluster_agent = yaml.full_load(open('./deployments/cluster-agent.yml', 'r'))
 
-app_name = f'"TeaStore-{CUSTOMER_NAME}"'
+app_name = f'TeaStore-{CUSTOMER_NAME}'
+app_name = re.sub('[^a-zA-Z]+', '_', app_name)
 
 cluster_agent['metadata']['name'] = f'{CUSTOMER_NAME}-k8s-cluster-agent'
 cluster_agent['spec']['account'] = APPD_ACCOUNT
