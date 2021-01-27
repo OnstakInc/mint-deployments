@@ -9,9 +9,9 @@ spec:
   controllerUrl: "CONTROLLER"
   image: "docker.io/appdynamics/cluster-agent:20.5.0"
   serviceAccountName: appdynamics-cluster-agent
-  nsToMonitor: [appdynamics,default,turbo2,tea-store]
+  nsToMonitor: [appdynamics,default,turbo,tea-store]
   instrumentationMethod: Env
-  nsToInstrumentRegex: appdynamics|turbo2|tea-store
+  nsToInstrumentRegex: appdynamics|turbo|tea-store
   appNameStrategy: manual
   defaultAppName: APP_NAME
   instrumentationRules:
