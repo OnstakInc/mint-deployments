@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-agent
+  namespace: appdynamics
+spec: 
+  selector:
+    matchLabels:
+      name: db-agent
+  template: 
+    metadata: 
+      labels: 
+        name: db-agent
+    spec:
+      serviceAccountName: appdynamics-cluster-agent
+      containers:
+      - name: db-agent
+        image: appdynamics/db-agent:4.5.16
+        imagePullPolicy: Always
+        env:
+        - name: APPDYNAMICS_DB_AGENT_NAME
+          value: "[[DB_AGENT_NAME]]"
+        - name: APPDYNAMICS_CONTROLLER_HOST_NAME
+          value: "[[CONTROLLER]]"
+        - name: APPDYNAMICS_CONTROLLER_PORT
+          value: "443"
+        - name: APPDYNAMICS_AGENT_ACCOUNT_NAME
+          value: "[[ACCOUNT]]"
+        - name: APPDYNAMICS_CONTROLLER_SSL_ENABLED
+          value: "true"
+        - name: APPDYNAMICS_AGENT_ACCOUNT_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              key: controller-key
+              name: cluster-agent-secret
+        resources:
+          limits:
+            cpu: "2"
+            memory: "2G"
+          requests:
+            cpu: "1"
+            memory: "1G"
+        volumeMounts:
+        - name: db-log-volume
+          mountPath: /opt/appdynamics/conf/logging/log4j.xml
+          subPath: log4j.xml
+      restartPolicy: Always
+      volumes:
+      - name: db-log-volume
+        configMap:
+          name: db-log-config
+          

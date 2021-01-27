@@ -50,3 +50,22 @@ file = open('./temp/cluster-agent.yml', 'w')
 file.write(cluster_agent)
 file.close()
 #######################################################################
+
+
+#######################################################################
+# Generate DB Agent Depoyment #########################################
+#######################################################################
+print('INFO: Generate DB Agent Deployment YAML')
+db_agent = open('./deployments/db-agent.yml', 'r').read()
+
+db_agent_name = f'{CUSTOMER_NAME}-DBAgent'
+db_agent_name = re.sub('[^a-zA-Z]+', '', db_agent_name)
+
+db_agent = db_agent.replace('[[DB_AGENT_NAME]]', db_agent_name)
+db_agent = db_agent.replace('[[ACCOUNT]]', APPD_ACCOUNT)
+db_agent = db_agent.replace('[[CONTROLLER]]', APPD_CONTROLLER)
+
+file = open('./temp/db-agent.yml', 'w')
+file.write(db_agent)
+file.close()
+#######################################################################
