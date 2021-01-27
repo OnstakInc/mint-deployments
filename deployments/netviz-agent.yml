@@ -18,7 +18,6 @@ spec:
       containers:
       - name: appd-netviz-agent
         image: docker.io/appdynamics/machine-agent-netviz:latest
-        imagePullPolicy: Never
         resources:
           requests:
             memory: "250Mi"
