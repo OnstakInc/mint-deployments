@@ -9,7 +9,7 @@ spec:
   appNameStrategy: manual
   controllerUrl: CONTROLLER_URL
   defaultAppName: DEFULT_APP_NAME
-  image: docker.io/appdynamics/cluster-agent:20.5.0
+  image: docker.io/appdynamics/cluster-agent:latest
   imageInfo:
     java:
       agentMountPath: /opt/appdynamics
