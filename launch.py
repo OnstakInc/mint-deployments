@@ -99,7 +99,7 @@ try:
             {'ParameterKey': 'VpcID', 'ParameterValue': VPC_ID},
             {'ParameterKey': 'SubnetId01', 'ParameterValue': SUBNET01_ID},
             {'ParameterKey': 'SubnetId02', 'ParameterValue': SUBNET02_ID},
-            {'ParameterKey': 'CustomerName', 'ParameterValue': CUSTOMER_NAME},
+            {'ParameterKey': 'CustomerName', 'ParameterValue': CUSTOMER_NAME.lower()},
             {'ParameterKey': 'EKSWorkerImageID', 'ParameterValue': EKS_WORKER_IMAGE},
         ]
 
