@@ -17,7 +17,7 @@ spec:
       hostNetwork: true
       containers:
       - name: appd-netviz-agent
-        image: appdynamics/appd-netviz-agent:latest
+        image: docker.io/appdynamics/appd-netviz-agent:latest
         imagePullPolicy: Never
         resources:
           requests:
