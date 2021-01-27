@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teastore-load
+  namespace: jmeter-load
+  labels:
+    app: teastore-load
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: teastore-load
+  template:
+    metadata:
+      labels:
+        app: teastore-load
+    spec:
+      containers:
+      - name: teastore-load
+        image: public.ecr.aws/g5f1l6f2/jmeter-teastore:latest
+        env:
+        - name: THREADS
+          value: "10"
+        - name: RAMP_TIME
+          value: "900"
+        - name: HOST
+          value: "teastore-webui.tea-store.svc"
+        - name: PORT
+          value: "8080"
+        - name: PROTOCOL
+          value: "http"

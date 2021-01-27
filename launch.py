@@ -16,19 +16,6 @@ SUBNET02_ID = os.environ.get('SUBNET02_ID')
 CUSTOMER_NAME = os.environ.get('CUSTOMER_NAME')
 EKS_WORKER_IMAGE = os.environ.get('EKS_WORKER_IMAGE')
 
-# PARAMETERS_FILE = './parameters.yml'
-# params = yaml.load(open(PARAMETERS_FILE), Loader=yaml.Loader)
-
-# AWS_ACCESS_KEY = params['aws_access_key']
-# AWS_SECRET_KEY = params['aws_secret_key']
-# AWS_REGION = params['aws_region']
-
-# VPC_ID = params['vpc_id']
-# SUBNET01_ID = params['subnet01_id']
-# SUBNET02_ID = params['subnet02_id']
-# CUSTOMER_NAME = params['customer_name']
-# EKS_WORKER_IMAGE = params['eks_worker_image_id']
-
 STACK_NAME = f'{CUSTOMER_NAME}-EKS-STACK'.upper()
 
 session = boto3.Session(

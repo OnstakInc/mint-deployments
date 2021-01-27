@@ -115,7 +115,11 @@ pipeline {
         }
         stage("Deploy JMeter Load") {
             steps {
-                echo ""
+                sh "kubectl create namespace jmeter-load --kubeconfig=./kubeconfig || true"
+                sh "kubectl delete -f ./deployments/jmeter-load.yml --namespace=jmeter-load --kubeconfig=./kubeconfig || true"
+                sh "sleep 10"
+                sh "kubectl apply -f ./deployments/jmeter-load.yml --namespace=jmeter-load --kubeconfig=./kubeconfig"
+                sh "sleep 10"
             }
         }
         stage("Cleanup") {
