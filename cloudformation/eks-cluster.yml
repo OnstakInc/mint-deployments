@@ -140,7 +140,7 @@ Resources:
             DeleteOnTermination: true
       IamInstanceProfile: !Ref EKSWorkerInstanceProfile
       ImageId: !Ref EKSWorkerImageID
-      InstanceType: t3.large
+      InstanceType: t3.xlarge
       KeyName: raheel
       SecurityGroups:
         - !Ref EKSSecurityGroup
