@@ -20,7 +20,7 @@ spec:
         image: public.ecr.aws/g5f1l6f2/jmeter-teastore:latest
         env:
         - name: THREADS
-          value: "10"
+          value: "5"
         - name: RAMP_TIME
           value: "900"
         - name: HOST
