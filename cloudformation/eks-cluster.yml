@@ -135,7 +135,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
-            VolumeSize: 40
+            VolumeSize: 80
             VolumeType: gp2
             DeleteOnTermination: true
       IamInstanceProfile: !Ref EKSWorkerInstanceProfile
