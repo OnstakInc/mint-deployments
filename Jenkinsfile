@@ -108,9 +108,9 @@ pipeline {
             steps {
                 sh "kubectl create namespace tea-store --kubeconfig=./kubeconfig || true"
                 sh "kubectl delete -f ./deployments/tea-store.yml --namespace=tea-store --kubeconfig=./kubeconfig || true"
-                sh "sleep 10"
+                sh "sleep 15"
                 sh "kubectl apply -f ./deployments/tea-store.yml --namespace=tea-store --kubeconfig=./kubeconfig"
-                sh "sleep 10"
+                sh "sleep 15"
             }
         }
         stage("Deploy JMeter Load") {
