@@ -63,7 +63,7 @@ db_agent_name = re.sub('[^a-zA-Z]+', '', db_agent_name)
 
 db_agent = db_agent.replace('[[DB_AGENT_NAME]]', db_agent_name)
 db_agent = db_agent.replace('[[ACCOUNT]]', APPD_ACCOUNT)
-db_agent = db_agent.replace('[[CONTROLLER]]', APPD_CONTROLLER)
+db_agent = db_agent.replace('[[CONTROLLER]]', APPD_CONTROLLER.replace('http://', '').replace('https://', ''))
 
 file = open('./temp/db-agent.yml', 'w')
 file.write(db_agent)
