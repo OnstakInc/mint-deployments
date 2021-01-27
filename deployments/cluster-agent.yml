@@ -1,33 +1,27 @@
 apiVersion: appdynamics.com/v1alpha1
 kind: Clusteragent
 metadata:
-  name: NAME
+  name: k8s-cluster-agent
   namespace: appdynamics
 spec:
-  account: ACCOUNT
-  appName: APP_NAME
+  account: "ACCOUNT"
+  appName: "APP_NAME"
+  controllerUrl: "CONTROLLER"
+  image: "docker.io/appdynamics/cluster-agent:20.5.0"
+  serviceAccountName: appdynamics-cluster-agent
+  nsToMonitor: [appdynamics,default,turbo2,tea-store]
+  instrumentationMethod: Env
+  nsToInstrumentRegex: appdynamics|turbo2|tea-store
   appNameStrategy: manual
-  controllerUrl: CONTROLLER_URL
-  defaultAppName: DEFULT_APP_NAME
-  image: docker.io/appdynamics/cluster-agent:latest
+  defaultAppName: APP_NAME
+  instrumentationRules:
+    - namespaceRegex: tea-store
+      appName: APP_NAME
+  resourcesToInstrument: [Deployment,StatefulSet]
   imageInfo:
     java:
+      image: "docker.io/appdynamics/java-agent:latest"
       agentMountPath: /opt/appdynamics
-      image: docker.io/appdynamics/java-agent:latest
-  instrumentationMethod: Env
-  instrumentationRules:
-  - appName: APP_NAME
-    namespaceRegex: tea-store
   netvizInfo:
     bciEnabled: true
     port: 3892
-  nsToInstrumentRegex: appdynamics|turbo|tea-store
-  nsToMonitor:
-  - appdynamics
-  - default
-  - turbo
-  - tea-store
-  resourcesToInstrument:
-  - Deployment
-  - StatefulSet
-  serviceAccountName: appdynamics-cluster-agent

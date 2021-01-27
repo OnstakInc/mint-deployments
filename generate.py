@@ -1,7 +1,5 @@
 import re
 import os
-import yaml
-import boto3
 import argparse
 
 TEMP_DIR = './temp'
@@ -39,17 +37,16 @@ APPD_CONTROLLER = args.controllerUrl
 # Generate Cluster Agent Depoyment ####################################
 #######################################################################
 print('INFO: Generate Cluster Agent Deployment YAML')
-cluster_agent = yaml.full_load(open('./deployments/cluster-agent.yml', 'r'))
+cluster_agent = open('./deployments/cluster-agent.yml', 'r').read()
 
 app_name = f'TeaStore-{CUSTOMER_NAME}'
 app_name = re.sub('[^a-zA-Z]+', '_', app_name)
 
-cluster_agent['metadata']['name'] = f'{CUSTOMER_NAME}-k8s-cluster-agent'
-cluster_agent['spec']['account'] = APPD_ACCOUNT
-cluster_agent['spec']['controllerUrl'] = APPD_CONTROLLER
-cluster_agent['spec']['appName'] = app_name
-cluster_agent['spec']['defaultAppName'] = app_name
-cluster_agent['spec']['instrumentationRules'][0]['appName'] = app_name
+cluster_agent = cluster_agent.replace('APP_NAME', app_name)
+cluster_agent = cluster_agent.replace('ACCOUNT', APPD_ACCOUNT)
+cluster_agent = cluster_agent.replace('CONTROLLER', APPD_CONTROLLER)
 
-yaml.dump(cluster_agent, open('./temp/cluster-agent.yml', 'w'))
+file = open('./temp/cluster-agent.yml', 'w')
+file.write(cluster_agent)
+file.close()
 #######################################################################
