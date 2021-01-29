@@ -94,7 +94,6 @@ pipeline {
         }
         stage("Deploy AppD Agents") {
             steps {
-                sh "cat ./temp/cluster-agent.yml"
                 sh "kubectl apply -f ./temp/cluster-agent.yml --namespace=appdynamics --kubeconfig=./kubeconfig"
                 sh "sleep 10"
                 sh "kubectl apply -f ./deployments/netviz-agent.yml --namespace=appdynamics --kubeconfig=./kubeconfig"
@@ -108,9 +107,9 @@ pipeline {
             steps {
                 sh "kubectl create namespace tea-store --kubeconfig=./kubeconfig || true"
                 sh "kubectl delete -f ./deployments/tea-store.yml --namespace=tea-store --kubeconfig=./kubeconfig || true"
-                sh "sleep 15"
+                sh "sleep 25"
                 sh "kubectl apply -f ./deployments/tea-store.yml --namespace=tea-store --kubeconfig=./kubeconfig"
-                sh "sleep 15"
+                sh "sleep 25"
             }
         }
         stage("Deploy JMeter Load") {
