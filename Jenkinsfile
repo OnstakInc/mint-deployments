@@ -122,6 +122,11 @@ pipeline {
                 sh "sleep 10"
             }
         }
+        stage("Information") {
+            steps {
+                sh "python3 -u ./info.py --customer=${CUSTOMER_NAME}"
+            }
+        }
         stage("Cleanup") {
             steps {
                 cleanWs()

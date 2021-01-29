@@ -13,7 +13,6 @@ parser.add_argument('--customer', type=str, help='Customer Name', required=True)
 parser.add_argument('--account', type=str, help='AppDynamics Account', required=True)
 parser.add_argument('--controllerUrl', type=str, help='AppDynamics Controller URL', required=True)
 args = parser.parse_known_args()[0]
-print(args.account)
 #######################################################################
 
 
