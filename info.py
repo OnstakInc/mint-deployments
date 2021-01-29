@@ -39,8 +39,9 @@ result = ec2.describe_instances(Filters=filters)
 
 for reservation in result['Reservations']:
     for instance in reservation['Instances']:
-        print(f"TeaStore URL: http://{instance.get('PublicIpAddress')}:30080")
-        print(f"K8 Dashboard URL: https://{instance.get('PublicIpAddress')}:32443")
+        if instance.get('PublicIpAddress'):
+            print(f"TeaStore URL: http://{instance.get('PublicIpAddress')}:30080")
+            print(f"K8 Dashboard URL: https://{instance.get('PublicIpAddress')}:32443")
 #######################################################################
 
 #######################################################################
