@@ -7,7 +7,7 @@ spec:
   account: "ACCOUNT"
   appName: "APP_NAME"
   controllerUrl: "CONTROLLER"
-  image: "docker.io/appdynamics/cluster-agent:20.5.0"
+  image: "docker.io/appdynamics/cluster-agent:latest"
   serviceAccountName: appdynamics-cluster-agent
   nsToMonitor: [appdynamics,default,turbo,tea-store]
   instrumentationMethod: Env
