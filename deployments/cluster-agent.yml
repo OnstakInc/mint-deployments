@@ -5,18 +5,18 @@ metadata:
   namespace: appdynamics
 spec:
   account: "ACCOUNT"
-  appName: "TeaStore"
+  appName: "APP_NAME"
   controllerUrl: "CONTROLLER"
   image: "docker.io/appdynamics/cluster-agent:20.5.0"
   serviceAccountName: appdynamics-cluster-agent
-  nsToMonitor: [appdynamics,default,turbo,tea-store]
+  nsToMonitor: [default,tea-store]
   instrumentationMethod: Env
   nsToInstrumentRegex: appdynamics|turbo|tea-store
   appNameStrategy: manual
   defaultAppName: APP_NAME
   instrumentationRules:
     - namespaceRegex: tea-store
-      appName: TeaStore
+      appName: APP_NAME
   resourcesToInstrument: [Deployment,StatefulSet]
   imageInfo:
     java:
